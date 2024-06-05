@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Login</title>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* 新增样式 */
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .login-form {
+            margin-bottom: 20px;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .login-form .login-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .login-form .login-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .login-form .register-link {
+            text-align: center;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .login-form .register-link:hover {
+            text-decoration: underline;
+        }
+
+        /* 新增样式：提示框 */
+        .login-error {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #ffcccc;
+            border: 1px solid #ff0000;
+            border-radius: 4px;
+            color: #ff0000;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+<div class="login-container">
+    <div class="login-title">Login</div>
+    <div class="login-form" id="loginForm">
+        <input type="text" id="username" placeholder="用户名">
+        <input type="password" id="password" placeholder="密码">
+        <button class="login-btn" id="loginBtn">Login</button>
+    </div>
+    <div id="loginError" class="login-error" style="display: none;">登录失败，请检查用户名和密码</div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        document.getElementById('loginBtn').addEventListener('click', function(event) {
+            event.preventDefault();
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+
+            // 发送登录请求
+            axios.post('/user/login', { username: username, password: password })
+                .then((res) => {
+                    console.log('Response:', res);
+                    if (res.data && res.data.data && res.data.data.role) {
+                        if (res.data.data.role === '1') {
+                            window.location.href = '/studentforad';
+                        } else if (res.data.data.role === '2') {
+                            window.location.href = '/studentforst';
+                        } else if (res.data.data.role === '3') {
+                            window.location.href = '/studentforte';
+                        }
+                    } else {
+                        console.error('Unexpected response structure:', res);
+                        document.getElementById('loginError').style.display = 'block'; // 显示登录失败提示
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error during login:', error);
+                    document.getElementById('loginError').style.display = 'block'; // 显示登录失败提示
+                });
+        });
+    </script>
+</div>
+</body>
+
+</html>
